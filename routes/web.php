@@ -1,0 +1,14 @@
+<?php
+
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\TodoController;
+Auth::routes();
+
+
+Route::get('/todo', [TodoController::class, 'index'])->name('todo.index');
+Route::get('/todo/create', [TodoController::class, 'create'])->name('todo.create');
+Route::post('/todo', [TodoController::class, 'store'])->name('todo.store');
+Route::get('/todo/{todo}/edit', [TodoController::class, 'edit'])->name('todo.edit');
+Route::put('/todo/{todo}', [TodoController::class, 'update'])->name('todo.update');
+Route::delete('/todo/{todo}', [TodoController::class, 'destroy'])->name('todo.destroy');
+
