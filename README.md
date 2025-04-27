@@ -33,6 +33,13 @@ A simple Laravel-based To-Do application with user authentication and full CRUD 
 
 ---
 
+## Updates
+
+## Features
+- Added migrations for new tables (e.g., `todos`, `sessions`, `password_reset_tokens`)
+- Updated existing tables with new columns like `nickname`, `avatar`, etc.
+
+
 ## 📦 Installation & Setup
 
 ### 1. Clone the Repository
