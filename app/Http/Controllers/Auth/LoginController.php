@@ -5,35 +5,14 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\LoginRequest; // ✅ Import LoginRequest
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
     protected $redirectTo = '/todo';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
@@ -41,8 +20,20 @@ class LoginController extends Controller
     }
 
     protected function loggedOut(Request $request)
-{
-    return redirect('/login');
-}
+    {
+        return redirect('/login');
+    }
 
+    // ✅ Override 'login' method to inject LoginRequest validation
+    public function login(LoginRequest $request)
+    {
+        if (auth()->attempt($request->only('email', 'password'))) {
+            $request->session()->regenerate();
+            return redirect()->intended($this->redirectPath());
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
 }

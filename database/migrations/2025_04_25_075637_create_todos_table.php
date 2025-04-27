@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
+            $table->string('title'); // Add the title column
+            $table->text('description'); // Add the description column
+            $table->string('status'); // Add the status column
+            $table->unsignedBigInteger('user_id'); // Add the user_id column for the foreign key
             $table->timestamps();
+
+            // Optional: If you want to set a foreign key constraint for user_id
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
