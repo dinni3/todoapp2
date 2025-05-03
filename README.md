@@ -39,6 +39,14 @@ A simple Laravel-based To-Do application with user authentication and full CRUD 
 - Added migrations for new tables (e.g., `todos`, `sessions`, `password_reset_tokens`)
 - Updated existing tables with new columns like `nickname`, `avatar`, etc.
 
+## Security Measure
+
+### MFA 
+- User provides their credentials. If MFA is enabled, Fortify will send an additional verification step through email. The user will input this second factor and system verifies it. If successful, user will be logged in and granted access to the application.
+
+### Bcrypt, Salt, Rate Limiting
+- Laravel already uses Bcrypt by default soo not much changes are needed. And the salt function was included early on in the migration file create_users_table. with the code in The RateLimiter was already included in FortifyServiceProvider.php . I only changed the RateLimiter to 3 instead of the default 5.
+
 
 ## 📦 Installation & Setup
 
