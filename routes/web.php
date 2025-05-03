@@ -4,9 +4,12 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TodoController;
+use App\Http\Controllers\MfaController;
+
 Auth::routes();
 
-
+Route::get('/mfa', [MfaController::class, 'show'])->name('mfa.form');
+Route::post('/mfa', [MfaController::class, 'verify'])->name('mfa.verify');
 Route::get('/todo', [TodoController::class, 'index'])->name('todo.index');
 Route::get('/todo/create', [TodoController::class, 'create'])->name('todo.create');
 Route::post('/todo', [TodoController::class, 'store'])->name('todo.store');
@@ -18,5 +21,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/mfa', function () {
+        return view('auth.mfa');
+    });
+    
 });
 
