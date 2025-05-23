@@ -25,4 +25,13 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    // app/Http/Controllers/HomeController.php (or AdminController)
+public function dashboard()
+{
+    $userId = auth()->id();
+    $todos = \App\Models\Todo::where('user_id', $userId)->latest()->get();
+    return view('dashboard', compact('todos'));
+}
+
 }

@@ -9,9 +9,10 @@ class CustomLoginResponse implements LoginResponseContract
 {
     public function toResponse($request)
     {
-        // If MFA is pending, redirect to MFA screen instead of login
-        if (session()->has('mfa_user_id')) {
-            return redirect('/mfa');
+      $user = auth()->user();
+
+        if ($user->role === 'admin') {
+            return redirect('/admin');
         }
 
         return redirect()->intended('/todo'); // or your post-login route

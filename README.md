@@ -47,6 +47,16 @@ A simple Laravel-based To-Do application with user authentication and full CRUD 
 ### Bcrypt, Salt, Rate Limiting
 - Laravel already uses Bcrypt by default soo not much changes are needed. And the salt function was included early on in the migration file create_users_table. with the code in The RateLimiter was already included in FortifyServiceProvider.php . I only changed the RateLimiter to 3 instead of the default 5.
 
+## Updates 2 
+
+### Implemented Role-Based Access Controller (RBAC)
+-Seperated two roles for users to users and admins. After login, user will be redirected to the normal todo page and admins will be redirected to the admin page. in todo list, users can only do normal CRUD operations and admins can view user's todo list app, delete, activate, or deactivate, user's account, permissions to do CRUD operations also. 
+
+### New tables
+- User Roles table to identify the user roles which contains RoleID, UserID, RoleName, Description.
+-Role Permissions table to identify what the user can do. Contains PermissionID, RoleID, Description (CRUD)
+
+
 
 ## 📦 Installation & Setup
 

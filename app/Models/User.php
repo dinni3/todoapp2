@@ -49,4 +49,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function todos()
+{
+    return $this->hasMany(Todo::class);
+}
+
+public function roles()
+{
+    return $this->hasMany(UserRole::class, 'UserID', 'id');
+}
+
+
 }
