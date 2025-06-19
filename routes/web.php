@@ -7,13 +7,14 @@ use App\Http\Controllers\AdminController; // <-- admin controller (create later)
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-Auth::routes();
+
+
+
+// MFA routes should be public (not require auth)
+Route::get('/mfa', [MfaController::class, 'show'])->name('mfa.show');
+Route::post('/mfa', [MfaController::class, 'verify'])->name('mfa.verify');
 
 Route::middleware(['auth'])->group(function () {
-
-    // MFA routes still accessible after login but before full access (if any)
-    Route::get('/mfa', [MfaController::class, 'show'])->name('mfa.form');
-    Route::post('/mfa', [MfaController::class, 'verify'])->name('mfa.verify');
 
     // Routes for Normal User (To-Do CRUD)
     Route::middleware('role:user')->group(function () {
