@@ -5,7 +5,7 @@
     <h2 class="text-2xl font-bold mb-6">Admin Dashboard - User Management</h2>
 
     @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div class="alert alert-success mb-4">
             {{ session('success') }}
         </div>
     @endif
@@ -28,54 +28,74 @@
                         <td class="py-2 px-4 border-b">{{ $user->email }}</td>
                         <td class="py-2 px-4 border-b">
                             @if ($user->is_active)
-                                <span class="text-green-600 font-semibold">Active</span>
+                                <span class="text-success fw-semibold">Active</span>
                             @else
-                                <span class="text-red-600 font-semibold">Inactive</span>
+                                <span class="text-danger fw-semibold">Inactive</span>
                             @endif
                         </td>
                         <td class="py-2 px-4 border-b">
-                            {{ $user->role ?? 'User' }}
+                            {{ $user->role?->RoleName ?? 'User' }}
                         </td>
-                        <td class="py-2 px-4 border-b flex gap-2">
+                        <td class="py-2 px-4 border-b d-flex gap-2">
                             @if (!$user->is_admin)
-                                @if ($user->is_active)
-                                    <form method="POST" action="{{ route('admin.deactivate', $user->id) }}">
+                                @if(auth()->user()->hasPermission('Activate'))
+                                    @if ($user->is_active)
+                                        <form method="POST" action="{{ route('admin.deactivate', $user->id) }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button class="btn btn-warning btn-sm">Deactivate</button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="{{ route('admin.activate', $user->id) }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button class="btn btn-success btn-sm">Activate</button>
+                                        </form>
+                                    @endif
+                                @endif
+                                @if(auth()->user()->hasPermission('Delete'))
+                                    <form method="POST" action="{{ route('admin.destroy', $user->id) }}">
                                         @csrf
-                                        @method('PATCH')
-                                        <button class="bg-yellow-500 text-white px-3 py-1 rounded">Deactivate</button>
-                                    </form>
-                                @else
-                                    <form method="POST" action="{{ route('admin.activate', $user->id) }}">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded">Activate</button>
+                                        @method('DELETE')
+                                        <button class="btn btn-danger btn-sm">Delete</button>
                                     </form>
                                 @endif
-                                <form method="POST" action="{{ route('admin.destroy', $user->id) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">Delete</button>
-                                </form>
                             @else
-                                <span class="text-gray-400 italic">Admin</span>
+                                <span class="text-muted fst-italic">Admin</span>
                             @endif
                         </td>
                     </tr>
-                    {{-- Show To-Dos --}}
+                    {{-- Show To-Dos and Create Task Form --}}
                     <tr>
-                        <td colspan="5" class="bg-gray-50 px-4 py-2">
-                            <h4 class="font-semibold mb-1">To-Do Tasks:</h4>
+                        <td colspan="5" class="bg-light px-4 py-2">
+                            <h4 class="fw-semibold mb-1">To-Do Tasks:</h4>
                             @if ($user->todos->isEmpty())
-                                <p class="text-sm text-gray-600">No tasks available.</p>
+                                <p class="text-muted small">No tasks available.</p>
                             @else
-                                <ul class="list-disc pl-6 text-sm">
+                                <ul class="list-unstyled ps-3 small">
                                     @foreach ($user->todos as $todo)
                                         <li>
                                             <strong>{{ $todo->title }}</strong> - {{ $todo->description }} 
-                                            <span class="text-gray-500">[{{ $todo->status }}]</span>
+                                            <span class="text-secondary">[{{ $todo->status }}]</span>
                                         </li>
                                     @endforeach
                                 </ul>
+                            @endif
+
+                            {{-- Inline Create Task Form --}}
+                            @if(auth()->user()->role?->RoleName === 'Admin')
+                                <form method="POST" action="{{ route('admin.tasks.store', $user->id) }}" class="mt-3 row g-2 align-items-center">
+                                    @csrf
+                                    <div class="col-auto">
+                                        <input type="text" name="title" placeholder="Task Title" required class="form-control form-control-sm" />
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" name="description" placeholder="Description" class="form-control form-control-sm" />
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary btn-sm">Add Task</button>
+                                    </div>
+                                </form>
                             @endif
                         </td>
                     </tr>

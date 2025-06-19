@@ -23,26 +23,30 @@
                 {{ session('error') }}
             </div>
             @endif
-            <form action="{{ route('todo.update', ['todo' => $todo->id]) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" class="form-control" id="title" name="title" value="{{ $todo->title }}">
-                </div>
-                <div class="form-group">
-                    <label for="description">Description:</label>
-                    <textarea name="description" class="form-control" id="description" rows="5">{{ $todo->description }}</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="status">Select todo status</label>
-                    <select class="form-control" id="status" name="status">
-                        <option value="pending" @if ($todo->status == 'pending') selected @endif>Pending</option>
-                        <option value="completed" @if ($todo->status == 'completed') selected @endif>Completed</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-info">Submit</button>
-            </form>
+            @if(auth()->user()->hasPermission('Update'))
+                <form action="{{ route('todo.update', ['todo' => $todo->id]) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-group">
+                        <label for="title">Title:</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ $todo->title }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <textarea name="description" class="form-control" id="description" rows="5">{{ $todo->description }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Select todo status</label>
+                        <select class="form-control" id="status" name="status">
+                            <option value="pending" @if ($todo->status == 'pending') selected @endif>Pending</option>
+                            <option value="completed" @if ($todo->status == 'completed') selected @endif>Completed</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-info">Submit</button>
+                </form>
+            @else
+                <div class="alert alert-warning mt-3">You do not have permission to update this To-Do.</div>
+            @endif
         </div>
     </div>
 </div>

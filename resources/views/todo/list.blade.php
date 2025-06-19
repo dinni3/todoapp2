@@ -9,8 +9,10 @@
       </div>
 <div class="col-md-6">
     <div class="float-right">
-        <a href="{{ route('todo.create') }}" class="btn btn-primary" ><i class="fas fa-plus"></i> Add Todo</a>
-</div>
+        @if(auth()->user()->hasPermission('Create'))
+            <a href="{{ route('todo.create') }}" class="btn btn-primary" ><i class="fas fa-plus"></i> Add Todo</a>
+        @endif
+    </div>
 </div>
 <br>
 <div class="col-md-12">
@@ -41,17 +43,19 @@
                 <td><center>{{ $todo->status }}</center></td>
                 <td>
                     <div class = "action_btn">
-                        <div class = "action_btn">
+                        @if(auth()->user()->hasPermission('Update'))
                             <a href="{{ route('todo.edit', $todo->id) }}" class="btn btn-warning">Edit</a>
-</div>
-<div class="action_btn margin-left-10">
-    <form action="{{ route('todo.destroy', $todo->id) }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
-</div>
-</div>
+                        @endif
+                    </div>
+                    <div class="action_btn margin-left-10">
+                        @if(auth()->user()->hasPermission('Delete'))
+                            <form action="{{ route('todo.destroy', $todo->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        @endif
+                    </div>
 </td>
 </tr>
 @empty

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,27 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = [
-            [
-                "name" => "taeyeon",
-                "email" => "taeyeon@gmail.com",
-                "password" => "12345678",
-            ],
-            [
-                "name" => "yoona",
-                "email" => "yoona@gmail.com",
-                "password" => "12345678",
-            ],
-        ];
 
-        foreach ($users as $userData) {
-            User::create($userData);
-        }
+        
 
+        $this->call(UserRolesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
+        $this->call(RolePermissionsTableSeeder::class);
 
-        $factory = new UserFactory();
-        $factory->count(10)->create();
+\App\Models\User::factory()->count(10)->create();
+
+
     }
 
 }

@@ -49,15 +49,25 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function todos()
-{
-    return $this->hasMany(Todo::class);
-}
 
-public function roles()
-{
-    return $this->hasMany(UserRole::class, 'UserID', 'id');
-}
+    public function todos()
+    {
+        return $this->hasMany(Todo::class);
+    }
+
+    // Assuming each user has one role (RoleID foreign key in users table)
+    public function role()
+    {
+        return $this->belongsTo(\App\Models\UserRole::class, 'RoleID', 'RoleID');
+    }
+
+    // Check if user has a specific permission
+    public function hasPermission($permission)
+    {
+ $role = $this->role;
+    if (!$role) return false;
+    return $role->permissions()->where('Description', $permission)->exists();
+    }
 
 
 }

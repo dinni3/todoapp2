@@ -28,7 +28,7 @@ Route::middleware(['auth'])->group(function () {
     // Routes for Admin User
     Route::middleware('role:admin')->prefix('admin')->group(function () {
          Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
+Route::post('/admin/users/{user}/tasks', [AdminController::class, 'storeTask'])->name('admin.tasks.store');
         Route::get('/users', [AdminController::class, 'index'])->name('admin.users.index');
         Route::delete('/users/{user}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
         Route::post('/users/{user}/activate', [AdminController::class, 'activate'])->name('admin.users.activate');

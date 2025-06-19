@@ -18,14 +18,21 @@ class UsersTableSeeder extends Seeder
             [
                 "name" => "user1",
                 "email" => "user1@gmail.com",
-                "password" => "12345678",
+                "password" => bcrypt("abcd1234"),
+                "RoleID" => 1,
             ],
             [
                 "name" => "user2",
                 "email" => "user2@gmail.com",
-                "password" => "12345678",
+                "password" => bcrypt("abcd1234"),
+                "RoleID" => 2,
             ],
-            // Add more user arrays as needed
+            [
+                "name" => "dinnie",
+                "email" => "dinniehaiqall@gmail.com",
+                "password" => bcrypt("abcd1234"),
+                "RoleID" => 1,
+            ],
         ];
     
         foreach ($users as $userData) {

@@ -36,13 +36,18 @@ class LoginController extends Controller
 
     // 🔁 Role-based redirection
     protected function redirectTo()
-    {
-        $user = auth()->user();
-
-        if ($user->role === 'admin') {
-            return '/admin/dashboard';
-        }
-
-        return '/todo';
+{
+    if (auth()->user()->role && auth()->user()->role->RoleName === 'Admin') {
+        return '/admin/dashboard';
     }
+    return '/todo';
+}
+
+    protected function authenticated(Request $request, $user)
+{
+    if ($user->role->RoleName === 'Admin') {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('todo.index');
+}
 }

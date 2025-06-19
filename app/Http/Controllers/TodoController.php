@@ -24,6 +24,9 @@ class TodoController extends Controller
      */
     public function create()
     {
+            if (!auth()->user()->hasPermission('Create')) {
+        abort(403, 'Unauthorized');
+    }
         return view('todo.add');
     }
 

@@ -28,6 +28,9 @@ class AdminController extends Controller
 
     public function deactivate(User $user)
     {
+            if (auth()->user()->role?->RoleName !== 'Admin') {
+        abort(403, 'Unauthorized');
+    }
         $user->is_active = false;
         $user->save();
         return back()->with('success', 'User deactivated.');
@@ -46,4 +49,19 @@ class AdminController extends Controller
         $todos = \App\Models\Todo::with('user')->get();
         return view('admin.dashboard', compact('users', 'todos')); // Make sure you have this Blade file
     }
+public function storeTask(Request $request, User $user)
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+    ]);
+
+    $user->todos()->create([
+        'title' => $request->title,
+        'description' => $request->description,
+        // Add other fields as needed
+    ]);
+
+    return back()->with('success', 'Task created for ' . $user->name);
+}
 }

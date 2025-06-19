@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class RolePermission extends Model
 {
-    public function role()
-{
-    return $this->belongsTo(UserRole::class, 'RoleID', 'RoleID');
-}
+    protected $table = 'role_permissions';
+    protected $primaryKey = 'PermissionID';
 
+    public function role()
+    {
+        return $this->belongsTo(UserRole::class, 'RoleID', 'RoleID');
+    }
 }

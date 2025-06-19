@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('salt')->nullable();
     $table->string('mfa_code')->nullable();
     $table->timestamp('mfa_expires_at')->nullable();
+
+    $table->unsignedBigInteger('RoleID')->default(1); // 1 = User, 2 = Admin, etc.
+    $table->foreign('RoleID')->references('RoleID')->on('user_roles');
             
             $table->rememberToken();
             $table->timestamps();
