@@ -26,6 +26,7 @@ class TodoController extends Controller
     {
         return view('todo.add');
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -35,9 +36,13 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         $userId = Auth::user()->id;
-        $input = $request->input();
-        $input['user_id'] = $userId;
-        $todoStatus = Todo::create($input);
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            // Add other fields as needed
+        ]);
+        $validated['user_id'] = $userId;
+        $todoStatus = Todo::create($validated);
 
         if ($todoStatus) {
             $message = 'Todo successfully added';
@@ -49,6 +54,7 @@ class TodoController extends Controller
 
         return redirect('todo')->with($type, $message);
     }
+
     /**
      * Display the specified resource.
      */
@@ -75,6 +81,7 @@ class TodoController extends Controller
             return redirect('todo')->with('error', 'Todo not found');
         }
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -89,9 +96,13 @@ class TodoController extends Controller
         if (!$todo) {
             return redirect('todo')->with('error', 'Todo not found.');
         }
-        $input = $request->input();
-        $input['user_id'] = $userId;
-        $todoStatus = $todo->update($input);
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            // Add other fields as needed
+        ]);
+        $validated['user_id'] = $userId;
+        $todoStatus = $todo->update($validated);
         if ($todoStatus) {
             return redirect('todo')->with('success', 'Todo successfully updated.');
         } else {
@@ -110,6 +121,7 @@ class TodoController extends Controller
         if (!$todo) {
             $respStatus = 'error';
             $respMsg = 'Todo not found';
+            return redirect('todo')->with($respStatus, $respMsg);
         }
         $todoDelStatus = $todo->delete();
         if ($todoDelStatus) {
